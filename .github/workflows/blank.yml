@@ -25,6 +25,7 @@ jobs:
                     node {
                       number
                       headRefName
+                      baseRefName
                       author {
                         login
                       }
@@ -43,7 +44,8 @@ jobs:
             }
             
             const {repository:{pullRequests:{edges: list}}} = await github.graphql(query, variables)
-            for( let {node} of list) {  
+            for( let {node} of list) { 
+             if(node.baseRefName === "main") continue;
              await github.pulls.merge({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
